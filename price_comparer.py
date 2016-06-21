@@ -1,5 +1,6 @@
 import urllib2
 from bs4 import BeautifulSoup
+import requests
 
 AMAZON_URL = "http://www.amazon.in/"
 
@@ -16,14 +17,22 @@ SEARCH_FLIPKART_URL = FLIPKART_URL + "searchq?"
 for i in range(len(SPLITTED_KEYWORD)):
 	SEARCH_FLIPKART_URL = SEARCH_FLIPKART_URL + "+" + SPLITTED_KEYWORD[i]
 
-def searcher(url):
+def url_crawler(url):
 	requester = urllib2.Request(url, headers={'User-Agent': "Magic Browser"})
-	url_opener = urllib2.urlopen(requester)
+	connector = urllib2.urlopen(requester)
+	connector_reader = connector.read()
+	soup = BeautifulSoup(connector_reader, "lxml")
+	return soup
 
-	reader = url_opener.read()
+soup = url_crawler(SEARCH_FLIPKART_URL)
 
-	soup = BeautifulSoup(reader, "lxml")
+#print soup
 
-	print soup
+product_class = soup.findAll("div", {"class": "gd-col gu3"})
 
-searcher(SEARCH_FLIPKART_URL)
+print product_class
+
+product_class_list = []
+
+for div in product_class:
+	print div
